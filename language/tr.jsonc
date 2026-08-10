@@ -1163,35 +1163,35 @@
     " görsel medya)",
 
     // Title for connection selection screen.
-    "Connection",
+    "Bağlantı türü",
 
     // Option in the connection selection screen to use the device's standard connectivity to go online.
-    "Cellular/Wi-Fi",
+    "Mobil veri/Wi-Fi",
 
     // Option in the connection selection screen to search for devices to use Bluetooth tethering via BlueWAP Server app.
-    "Bluetooth search",
+    "Bluetooth araması",
 
     // Option in the connection selection screen to show an explanation of BT tethering.
-    "Help",
+    "Yardım",
 
     // Line shown in the connection screen when a device search ended with no results.
-    "No devices found",
+    "Hiçbir cihaz bulunamadı.",
 
     // Text shown in a separate dialog screen when a device search ended with no results.
-    "No devices found. Make sure the server device is set to visible, then try again.",
+    "Hiçbir cihaz bulunamadı. Sunucu cihazının görünür olarak ayarlandığından emin olun, sonra tekrar deneyin.",
 
     // Line shown in the connection screen when a device search ended with at least one result.
-    "Search completed",
+    "Arama tamamlandı",
 
     // Title for connection help dialog.
-    "Help",
+    "Yardım",
 
     // Lines shown in the connection help screen (separate dialog). These are formatted using bullet points.
-    "Select 'Bluetooth search' to tether to a device running BlueWAP Server.",
-    "Use Direct connection if your server device supports TLS 1.2 (e.g. Android 5+).",
-    "Get BlueWAP Server: github.com/gtrxAC/BlueWAP",
+    "BlueWAP Sunucusu çalıştıran bir cihaza bağlanmak için 'Bluetooth araması' seçeneğini seçin.",
+    "Eğer sunucu cihazınız TLS 1.2 destekliyorsa (örn. Android 5+ gibi) Doğrudan bağlantıyı kullanın.",
+    "BlueWAP Server'ı indirin: github.com/gtrxAC/BlueWAP",
 
     // Lines shown in the connection screen when searching for devices or when connecting to a found device.
-    "Searching...",
-    "Connecting..."
+    "Aranıyor...",
+    "Bağlanıyor..."
 ]
