@@ -1149,53 +1149,53 @@
     "Ha ez az eszköz támogatja a Wi-Fit, próbálj ugyanarra a hálózatra kapcsolódni ahonnan legtöbbször használod a Discordot.",
 
     // Error message shown when the authentication code is in an invalid format.
-    "Please enter a valid authentication code in the format '123456'",
+    "Kérlek, írj be egy helyes kétl. azonosító kódot (pl. 123456).",
 
     // Progress message shown in the password login screen during the beginning, right after entering the password and email.
-    "Initiating login...",
+    "Bejelentkezés folyamatban",
 
     // Text shown before the latest update's changelog in the update dialog screen.
-    "\n\nWhat's new?\n",
+    "\n\nÚj funkciók és fejlesztések\n",
 
     // Suffixes of attachment indicators in notification previews.
     // For example a notification could say
     //   User sent you a direct message: "Check this out (2 images) (1 file)"
     // "Images" are for any file types that are previewable as images (which also includes videos), "files" are for any other type of file.
-    " file)",
-    " files)",
-    " image)",
-    " images)",
+    " fájl)",
+    " fájl)",
+    " kép)",
+    " kép)",
 
     // Title for connection selection screen.
-    "Connection",
+    "Kapcsolat",
 
     // Option in the connection selection screen to use the device's standard connectivity to go online.
-    "Cellular/Wi-Fi",
+    "Mobilnet/Wi-Fi",
 
     // Option in the connection selection screen to search for devices to use Bluetooth tethering via BlueWAP Server app.
-    "Bluetooth search",
+    "Bluetooth-keresés",
 
     // Option in the connection selection screen to show an explanation of BT tethering.
-    "Help",
+    "Segítség",
 
     // Line shown in the connection screen when a device search ended with no results.
-    "No devices found",
+    "Nincs eszköz",
 
     // Text shown in a separate dialog screen when a device search ended with no results.
-    "No devices found. Make sure the server device is set to visible, then try again.",
+    "N található eszköz. Győződj meg arról, hogy a szerver-eszköz (BlueWAP szerver) látható.",
 
     // Line shown in the connection screen when a device search ended with at least one result.
-    "Search completed",
+    "Keresés befejezve",
 
     // Title for connection help dialog.
-    "Help",
+    "Segítség",
 
     // Lines shown in the connection help screen (separate dialog). These are formatted using bullet points.
-    "Select 'Bluetooth search' to tether to a device running BlueWAP Server.",
-    "Use Direct connection if your server device supports TLS 1.2 (e.g. Android 5+).",
-    "Get BlueWAP Server: github.com/gtrxAC/BlueWAP",
+    "Válaszd a 'Bluetooth-kapcs.' opciót, hogy Bluetooth-tethering segítségével kapcsolódj az internethez (és a Discordhoz).",
+    "Használd a közvetlen kapcsolatot, ha a szervereszk. támogatja a TLS 1.2-t vagy annál újabbat (pl. Android 5 felett)",
+    "Töltsd le a BlueWAP-szervert: github.com/gtrxAC/BlueWAP",
 
     // Lines shown in the connection screen when searching for devices or when connecting to a found device.
-    "Searching...",
-    "Connecting..."
+    "Keresés...",
+    "Kapcsolódás..."
 ]
