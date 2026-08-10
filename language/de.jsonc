@@ -1190,7 +1190,7 @@
 
     // Lines shown in the connection help screen (separate dialog). These are formatted using bullet points.
     "Wähle 'Bluetooth-Suche' zum tethern eines Gerätes, das BlueWAP-Server ausführt.",
-    "Verwenden Sie eine direkte Verbindung, wenn Ihr Servergerät TLS 1.2 unterstützt (e.g. Android 5+).",
+    "Verwenden Sie eine direkte Verbindung, wenn Ihr Servergerät TLS 1.2 unterstützt (z. B. Android 5+).",
     "BlueWAP-Server herunterladen: github.com/gtrxAC/BlueWAP",
 
     // Lines shown in the connection screen when searching for devices or when connecting to a found device.
