@@ -23,6 +23,12 @@ public class ConnectionScreen extends ListScreen implements BluetoothClientListe
         initClient();
         clearAndRefresh();
 
+        RemoteDevice[] knownDevices = client.getKnownDevices();
+
+        for (int i = 0; i < knownDevices.length; i++) {
+            addDeviceItem(knownDevices[i].getBluetoothAddress(), knownDevices[i]);
+        }
+
         quitCommand = Locale.createCommand(QUIT, Command.EXIT, 0);
         addCommand(quitCommand);
     }
