@@ -16,14 +16,14 @@ if errorlevel 1 (
 echo Generating translations
 cd language
 if not exist node_modules (
-    npm i
+    call npm i
 )
 node convert.js
 cd ..
 
 if not exist sdk/node_modules (
     cd sdk
-    npm i
+    call npm i
     cd ..
 )
 node sdk/compile_all.js
