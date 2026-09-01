@@ -2,14 +2,20 @@
 build/
 classes/
 node_modules/
-sdk/jdk*/
 log.txt
 res/*.json
 *.jar
 !sdk/JadTool.jar
+!sdk/proguard.jar
+!sdk/jdk*/**/*.jar
 !lib/*.jar
+!sdk/lib/*.jar
+!tools/**/*.jar
 lib/*/
 *.jad
 *.map
 !mapping.map
 *.apk
+
+# JDK's own source archive - not needed to build/run, just saves ~52MB
+sdk/jdk*/src.zip

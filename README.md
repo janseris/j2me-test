@@ -29,11 +29,23 @@ Also see [Droidcord](https://github.com/leap0x7b/Droidcord), a Discord client fo
 * Reactions
 
 ## How to build
-1. Install [Node.js](https://nodejs.org).
-2. Download [Temurin OpenJDK 8](https://adoptium.net/temurin/releases/?version=8&package=jdk) (zip or tar.gz). Extract the package into the `sdk` folder. Make sure there is a sub-folder named something like `sdk/jdk8u...`.
-3. Download [ProGuard](https://github.com/Guardsquare/proguard/releases/latest). Extract the package and copy the extracted `lib/proguard.jar` file into the `sdk` folder.
-4. Download [midpapi20](https://github.com/vipaoL/j2me-build-tools/raw/c1598b6916f2ba2ad5be1c0accd1ed2a54c156f3/WTK2.5.2/lib/midpapi20.jar), [cldcapi10](https://github.com/vipaoL/j2me-build-tools/raw/c1598b6916f2ba2ad5be1c0accd1ed2a54c156f3/WTK2.5.2/lib/cldcapi10.jar), [cldcapi11](https://github.com/vipaoL/j2me-build-tools/raw/c1598b6916f2ba2ad5be1c0accd1ed2a54c156f3/WTK2.5.2/lib/cldcapi11.jar), [jsr75](https://github.com/vipaoL/j2me-build-tools/raw/c1598b6916f2ba2ad5be1c0accd1ed2a54c156f3/WTK2.5.2/lib/jsr75.jar), [jsr82](https://github.com/vipaoL/j2me-build-tools/raw/e48bfaa97600f4aea8e5e1fff8af769755e2d1e9/lib/jsr82.jar), [javapiglerapi](https://nnp.nnchan.ru/pna/lib/javapiglerapi.jar), and [nokiaui](https://github.com/vipaoL/j2me-build-tools/raw/refs/heads/master/lib/nokiaui.jar) JARs. Place these in the `sdk/lib` folder.
-5. Run `build.sh` (Linux) or `build.bat` (Windows).
+This fork bundles the whole build toolchain (JDK 8, ProGuard, and the J2ME stub API jars) directly in the repository, so cloning it is enough to build it - nothing else to download.
+
+1. Install [Node.js](https://nodejs.org) (used to run the build scripts).
+2. *(Optional, for editing the code)* Any Java-aware editor works here - the build never goes through an IDE, it's just `build.sh`/`build.bat` calling `javac` directly, so nothing depends on your editor choice. This repo's `.vscode/` config is set up for [VS Code](https://code.visualstudio.com/) (install the **Extension Pack for Java** extension) since that's what's easiest to preconfigure, but Eclipse, IntelliJ IDEA, or NetBeans work just as well - just add the jars in `sdk/lib` (plus `sdk/proguard.jar`) as external/referenced libraries in whichever one you use, for completion against the J2ME APIs.
+3. Run `build.sh` (Linux) or `build.bat` (Windows). The first run installs a couple of small npm packages, converts the translation files, then compiles every target listed in `build.json` into `bin/` (a `.jar` + `.jad` per target).
+
+### Testing builds
+[KEmulator nnmod](https://nnproject.cc/kem/) is a Java ME emulator, useful for quick testing without a real device. It's bundled in this repo too, at `tools/kemnnx64` (same reasoning as the build toolchain - it's a niche community tool, and niche download links have a habit of going dead).
+- Double-click `run_kemulator.bat` at the repo root for the quickest option - it launches `bin\discord_s60v2.jar` in KEmulator. Edit the jar name inside it once you have your own target built.
+- Or use the VS Code tasks (`Terminal > Run Task > Run Discord J2ME for ...`) - these already point at the bundled `tools/kemnnx64` via `${workspaceFolder}`, nothing to configure.
+- Or run it directly yourself, e.g. `tools\kemnnx64\KEmulator_Console.bat bin\discord_s60v2.jar`.
+- Or launch/debug it from another IDE instead - KEmulator supports the old UEI (Unified Emulator Interface) standard, so it can be wired up as a run target from Eclipse (with the MTJ plugin) or NetBeans, and it also ships some bundled IntelliJ IDEA integration. None of this is VS Code-specific.
+
+The bundled copy already has a `640x200 (Nokia 9300/9500 - Series 80)` device preset added (see `tools/kemnnx64/presets_custom.xml`), set as the default - useful context if you're also targeting Series 80 devices.
+
+### Updating the bundled toolchain
+If you ever need to bump a version, here's where the bundled files originally came from: [Temurin OpenJDK 8](https://adoptium.net/temurin/releases/?version=8&package=jdk) (extract into `sdk/`, keep the `sdk/jdk8u...` folder name pattern), [ProGuard](https://github.com/Guardsquare/proguard/releases/latest) (`lib/proguard.jar` from the release archive, into `sdk/proguard.jar`), the stub API jars - [midpapi20](https://github.com/vipaoL/j2me-build-tools/raw/c1598b6916f2ba2ad5be1c0accd1ed2a54c156f3/WTK2.5.2/lib/midpapi20.jar), [cldcapi10](https://github.com/vipaoL/j2me-build-tools/raw/c1598b6916f2ba2ad5be1c0accd1ed2a54c156f3/WTK2.5.2/lib/cldcapi10.jar), [cldcapi11](https://github.com/vipaoL/j2me-build-tools/raw/c1598b6916f2ba2ad5be1c0accd1ed2a54c156f3/WTK2.5.2/lib/cldcapi11.jar), [jsr75](https://github.com/vipaoL/j2me-build-tools/raw/c1598b6916f2ba2ad5be1c0accd1ed2a54c156f3/WTK2.5.2/lib/jsr75.jar), [jsr82](https://github.com/vipaoL/j2me-build-tools/raw/e48bfaa97600f4aea8e5e1fff8af769755e2d1e9/lib/jsr82.jar), [javapiglerapi](https://nnp.nnchan.ru/pna/lib/javapiglerapi.jar), and [nokiaui](https://github.com/vipaoL/j2me-build-tools/raw/refs/heads/master/lib/nokiaui.jar) - into `sdk/lib`, and [KEmulator nnmod](https://github.com/shinovon/KEmulator/releases) (the `kemnnx64` Windows x64 build) - extract into `tools/kemnnx64`. The two `.bat` launchers in that folder auto-detect the bundled JDK (same `dir /b sdk\jdk*` trick `build.bat` uses) instead of relying on a system-wide Java install, so they don't need editing when the JDK version changes - only `.vscode/settings.json`'s `java.jdt.ls.java.home` has the JDK folder name hardcoded and needs a manual bump.
 
 ## Thanks
 * [@uwmpr](https://github.com/uwmpr) for formerly hosting the default proxy server

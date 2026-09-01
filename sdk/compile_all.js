@@ -47,6 +47,10 @@ const compileTarget = (target) => {
 
 const compileAll = async () => {
   for (const target of targets) {
+    if (target.disabled) {
+      console.log(`Skipping disabled target: ${target.name}`);
+      continue;
+    }
     try {
       await compileTarget(target);
     } catch (error) {
