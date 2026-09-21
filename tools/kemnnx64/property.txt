@@ -1,5 +1,5 @@
 #KEmulator properties
-#Mon Sep 21 21:57:58 CEST 2026
+#Mon Sep 21 23:08:21 CEST 2026
 2D_Graphics_Engine=AWT
 3D_Graphics_Engine=LWJ
 AWTAntiAliasing=false
@@ -57,11 +57,11 @@ MAP_KEY_UP=UP
 MIDIGlobalSequencer=false
 MIDIReopenDevice=true
 MIDISearchVMS=true
-MRUList0=C\:\\Users\\Jan\\Desktop\\prace\\KadlecElektro\\Nokia9300\\discord-j2me\\bin\\discord_s60v2.jar
-MRUList1=
-MRUList2=
-MRUList3=
-MRUList4=
+MRUList0=C\:\\Users\\Jan\\Desktop\\prace\\KadlecElektro\\Nokia9300\\discord-j2me\\bin\\discord_debug.jar
+MRUList1=C\:\\Users\\Jan\\Desktop\\prace\\KadlecElektro\\Nokia9300\\discord-j2me\\bin\\discord_debug.jar
+MRUList2=C\:\\Users\\Jan\\Downloads\\JBenchmark3D.jar
+MRUList3=C\:\\Users\\Jan\\Downloads\\jst.jar
+MRUList4=C\:\\Users\\Jan\\Downloads\\JBenchmark.jar
 Maximized=false
 Micro3D_Engine=GL
 MonospacedFont=Cascadia Mono
