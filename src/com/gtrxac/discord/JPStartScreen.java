@@ -27,10 +27,16 @@ import javax.microedition.lcdui.*;
  * a shallow depth and a darker front face, so it reads as pressed in instead of popped
  * out.
  *
+ * This screen implements JPLoadingHost: while a request is in flight, JPThread asks it
+ * to draw its own inline loading overlay (a dimmed grid + a spinner, see JPSpinner)
+ * instead of switching away to a separate loading page - the grid stays exactly where
+ * it is. The List/Form-based JP screens can't do this (a native List/Form can't have
+ * custom graphics drawn over it), so they still fall back to JPLoadingScreen.
+ *
  * The original Discord client is still fully present in this codebase and untouched -
  * see App.startApp()/App.login() - this screen has just been made the default for now.
  */
-public class JPStartScreen extends Canvas implements CommandListener {
+public class JPStartScreen extends Canvas implements CommandListener, JPLoadingHost {
     private static final Command INFO_COMMAND = new Command("Info", Command.HELP, 5);
     private static final Command OPEN_COMMAND = new Command("Open", Command.OK, 1);
 
@@ -60,6 +66,10 @@ public class JPStartScreen extends Canvas implements CommandListener {
     // The currently highlighted button: set on pointerDragged() (hover) or by keyboard
     // navigation, and opened on pointerPressed() (tap) or FIRE/OPEN_COMMAND (select).
     private int selected = 0;
+
+    // Set by JPThread via JPLoadingHost while a request is in flight. See setLoading().
+    private boolean loading = false;
+    private int spinnerFrame = 0;
 
     public JPStartScreen() {
         setTitle("JSONPlaceholder");
@@ -110,16 +120,65 @@ public class JPStartScreen extends Canvas implements CommandListener {
         JPListScreen.openTopLevel(RESOURCES[selected], this);
     }
 
+    // --- Loading overlay (JPLoadingHost) --------------------------------------------
+
+    /**
+     * Called by JPThread instead of switching to JPLoadingScreen. Starts (or stops) a
+     * small ticker thread that repaints this Canvas every JPSpinner.TICK_MS so the
+     * spinner drawn in paint() actually animates - there's no Timer/TimerTask in this
+     * profile, so a plain sleeping Thread is the simplest thing that works.
+     */
+    public void setLoading(boolean value) {
+        loading = value;
+        repaint();
+
+        if (loading) {
+            Thread ticker = new Thread() {
+                public void run() {
+                    while (loading) {
+                        spinnerFrame++;
+                        repaint();
+                        try {
+                            Thread.sleep(JPSpinner.TICK_MS);
+                        }
+                        catch (InterruptedException e) {}
+                    }
+                }
+            };
+            ticker.start();
+        }
+    }
+
+    /**
+     * Dims the button grid with a stipple (MIDP2's Graphics has no real alpha
+     * blending - every other scanline is blacked out instead) and draws the spinner
+     * over the middle of it.
+     */
+    private void drawLoadingOverlay(Graphics g) {
+        int w = getWidth();
+        int h = getHeight();
+
+        g.setColor(0x000000);
+        for (int yy = 0; yy < h; yy += 2) {
+            g.drawLine(0, yy, w - 1, yy);
+        }
+
+        int size = Math.min(w, h) / 4;
+        if (size < 20) size = 20;
+        JPSpinner.draw(g, w / 2, h / 2, size, spinnerFrame, BUTTON_FOCUS_COLOR, BG_COLOR);
+    }
+
     // --- Pointer input (primary) ---------------------------------------------------
 
     public void pointerPressed(int x, int y) {
+        if (loading) return;
         layout();
         int idx = cellAt(x, y);
         if (idx >= 0) {
             // Not calling serviceRepaints() here: it throws IllegalStateException when
             // invoked from the event thread, which is exactly where pointerPressed()
-            // runs. A plain repaint() is enough - JPThread shows its own loading screen
-            // right after, so there's no need to block on this frame first.
+            // runs. A plain repaint() is enough - the loading overlay appears as soon
+            // as the request thread calls setLoading(true) right after.
             selected = idx;
             repaint();
             openSelected();
@@ -127,6 +186,7 @@ public class JPStartScreen extends Canvas implements CommandListener {
     }
 
     public void pointerDragged(int x, int y) {
+        if (loading) return;
         layout();
         int idx = cellAt(x, y);
         if (idx >= 0 && idx != selected) {
@@ -138,6 +198,8 @@ public class JPStartScreen extends Canvas implements CommandListener {
     // --- Keyboard input (secondary fallback) ----------------------------------------
 
     protected void keyPressed(int keyCode) {
+        if (loading) return;
+
         int action;
         try {
             action = getGameAction(keyCode);
@@ -181,6 +243,10 @@ public class JPStartScreen extends Canvas implements CommandListener {
             int col = i % cols;
             int row = i / cols;
             drawButton(g, i, col * cellW, row * cellH, cellW, cellH);
+        }
+
+        if (loading) {
+            drawLoadingOverlay(g);
         }
     }
 
@@ -345,7 +411,7 @@ public class JPStartScreen extends Canvas implements CommandListener {
 
     public void commandAction(Command c, Displayable d) {
         if (c == OPEN_COMMAND) {
-            openSelected();
+            if (!loading) openSelected();
         }
         else if (c == INFO_COMMAND) {
             Alert alert = new Alert(

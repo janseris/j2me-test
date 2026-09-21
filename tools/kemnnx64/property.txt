@@ -1,5 +1,5 @@
 #KEmulator properties
-#Mon Sep 21 23:08:21 CEST 2026
+#Mon Sep 21 23:17:24 CEST 2026
 2D_Graphics_Engine=AWT
 3D_Graphics_Engine=LWJ
 AWTAntiAliasing=false
