@@ -25,7 +25,10 @@ const compileTarget = (target) => {
     console.log(` Compiling: ${target.name}`)
     console.log(`${"_".repeat(80)}\n`)
 
-    const compileProcess = cp.spawn(compileScript, compileScriptArgs, { stdio: 'inherit', shell: true });
+    // shell is only needed to run sdk/compile.sh on Linux/macOS (a script, not an
+    // executable) - on Windows we spawn powershell.exe directly with its args, which
+    // doesn't need a shell and avoids Node's DEP0190 warning about unescaped shell args.
+    const compileProcess = cp.spawn(compileScript, compileScriptArgs, { stdio: 'inherit', shell: !win });
 
     compileProcess.on('close', (code) => {
       if (code !== 0) {

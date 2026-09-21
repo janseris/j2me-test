@@ -4,7 +4,6 @@ $ErrorActionPreference = "Stop"
 # Clean up JAVA_HOME path in case it has quotes
 $env:JAVA_HOME = $env:JAVA_HOME.Trim('"')
 
-Write-Host "Setting up directories"
 # Create directories if they don't exist
 $dirs = @("bin", "classes", "res", "src", "build")
 foreach ($dir in $dirs) {
@@ -17,13 +16,11 @@ foreach ($dir in $dirs) {
 Remove-Item -Recurse -Force build\* -ErrorAction SilentlyContinue
 Remove-Item -Recurse -Force classes\* -ErrorAction SilentlyContinue
 
-Write-Host "Preprocessing"
 # Find all .java files in src
 $javaFiles = Get-ChildItem -Recurse -Path src -Filter *.java | ForEach-Object { $_.FullName }
 # Run preprocessing
 node sdk/preprocess.js @javaFiles manifest.mf midlets.pro $env:DEFINES
 
-Write-Host "Copying assets"
 New-Item -ItemType Directory -Path build\res -Force | Out-Null
 Copy-Item res\* build\res -Recurse -Force
 
@@ -39,7 +36,6 @@ if ($env:EXCLUDES) {
     Set-Location ../..
 }
 
-Write-Host "Compiling"
 $javac = Join-Path $env:JAVA_HOME "bin\javac"
 $javaFilesToCompile = Get-ChildItem -Recurse -Path build\src -Filter *.java | ForEach-Object { $_.FullName }
 & $javac @javaFilesToCompile `
@@ -61,19 +57,18 @@ if (-Not (Test-Path "lib\ModernConnector")) {
     Set-Location "..\.."
 }
 
-Write-Host "Creating JAR"
 & $jar cvf bin/in.jar -C classes . -C build/res . >> sdk/log.txt
 if ($env:MODCON -eq 1) {
     & $jar uvf bin/in.jar -C lib/ModernConnector . >> sdk/log.txt
 }
 & $jar uvfm bin/in.jar build/manifest.mf >> sdk/log.txt
 
-Write-Host "Verifying"
 $java = Join-Path $env:JAVA_HOME "bin\java"
-& $java -jar sdk/proguard.jar @build/midlets.pro -printmapping "bin/$($env:JAR_NAME).map"
+& $java -jar sdk/proguard.jar @build/midlets.pro -printmapping "bin/$($env:JAR_NAME).map" *>> sdk/log.txt
 Remove-Item bin/in.jar
 Move-Item bin/out.jar "bin/$($env:JAR_NAME).jar" -Force
 
 # Show output JAR file size
 $jarPath = "bin/$($env:JAR_NAME).jar"
-(Get-Item $jarPath).Length
+$jarSizeKB = [math]::Round((Get-Item $jarPath).Length / 1KB, 1)
+Write-Host "Built $jarPath ($jarSizeKB KB)"

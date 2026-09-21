@@ -62,6 +62,10 @@ public class App extends MIDlet implements Strings {
 
 	public static final long DISCORD_EPOCH = 1420070400000L;
 
+	// --- Temporary: see startApp() below. Set to false (or wire JPStartScreen's "Info"
+	// command / a debug menu item into App.login()) to get back to the normal flow. ---
+	public static final boolean USE_JSONPLACEHOLDER_START_SCREEN = true;
+
 	static MyDisplay disp;
 
 	static GatewayThread gateway;
@@ -128,22 +132,30 @@ public class App extends MIDlet implements Strings {
             Settings.load();
 			IconCache.init();
 
+			// --- Temporary: new start screen (JSONPlaceholder API test UI) ---
+			// This replaces the normal Discord login flow below while that new UI is
+			// being built out. The original flow (still fully working) is in the
+			// "else" branch - see JPStartScreen for what's new.
+			if (USE_JSONPLACEHOLDER_START_SCREEN) {
+				disp.setCurrent(new JPStartScreen());
+			} else {
 //#ifndef NO_BLUETOOTH
-			if (Util.supportsBluetooth) {
-				Theme.load();
-				loadFonts();
-				disp.setCurrent(new ConnectionScreen());
-			} else
-//#endif
-			{
-				// If token was not found in save file, go to login screen, else login and go to main menu
-				if (Settings.token.trim().length() == 0) {
-					// Theme and fonts need to be loaded so Dialog screens can be shown as part of the LoginForm
+				if (Util.supportsBluetooth) {
 					Theme.load();
 					loadFonts();
-					disp.setCurrent(new LoginForm());
-				} else {
-					login();
+					disp.setCurrent(new ConnectionScreen());
+				} else
+//#endif
+				{
+					// If token was not found in save file, go to login screen, else login and go to main menu
+					if (Settings.token.trim().length() == 0) {
+						// Theme and fonts need to be loaded so Dialog screens can be shown as part of the LoginForm
+						Theme.load();
+						loadFonts();
+						disp.setCurrent(new LoginForm());
+					} else {
+						login();
+					}
 				}
 			}
             started = true;
